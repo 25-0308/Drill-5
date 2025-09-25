@@ -12,6 +12,7 @@ x,y=400,300
 running = True
 idle_bool=True
 run_bool=False
+run_back_bool=False
 up_bool=False
 down_bool=False
 
@@ -22,6 +23,7 @@ def handle_events():
     global run_bool
     global up_bool
     global down_bool
+    global run_back_bool
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
@@ -30,7 +32,7 @@ def handle_events():
             if event.key == SDLK_LEFT:
                 if x > 50:
                     idle_bool = False
-                    run_bool = True
+                    run_back_bool = True
                     x -= 10
             elif event.key == SDLK_RIGHT:
                 if x < 750:
@@ -56,6 +58,7 @@ def handle_animation():
     global idle_bool
     global up_bool
     global down_bool
+    global run_back_bool
     clear_canvas()
     bg.clip_draw(0, 0, 1280, 1024, 400, 300, 800, 600)
     character.clip_draw(0, 0, 100, 100, x, y)
@@ -64,6 +67,10 @@ def handle_animation():
     if run_bool:
         run()
         run_bool = False
+        idle_bool = True
+    if run_back_bool:
+        run_back()
+        run_back_bool = False
         idle_bool = True
     if up_bool:
         up()
@@ -90,6 +97,15 @@ def run():
     for i in range(6):
         c_run.clip_draw(run_frame*103, 0, 103, 30, x, y-50)
         run_frame = (run_frame + 1) % 6
+        delay(0.05)
+        update_canvas()
+
+def run_back():
+    global x, y
+    run_frame = 5
+    for i in range(6):
+        c_run.clip_draw(run_frame*103, 0, 103, 30, x, y-50)
+        run_frame = (run_frame - 1) % 6
         delay(0.05)
         update_canvas()
 
