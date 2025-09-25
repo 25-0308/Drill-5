@@ -18,13 +18,17 @@ def handle_events():
             running = False
         elif event.type == SDL_KEYDOWN:
             if event.key == SDLK_LEFT:
-                x -= 10
+                if x > 50:
+                    x -= 10
             elif event.key == SDLK_RIGHT:
-                x += 10
+                if x < 750:
+                    x += 10
             elif event.key == SDLK_UP:
-                y += 10
+                if y < 550:
+                    y += 10
             elif event.key == SDLK_DOWN:
-                y -= 10
+                if y > 80:
+                    y -= 10
             elif event.key == SDLK_ESCAPE:
                 running = False
 
@@ -34,6 +38,7 @@ def bg_n_face():
     clear_canvas()
     bg.clip_draw(0, 0, 1280, 1024, 400, 300, 800, 600)
     character.clip_draw(0, 0, 100, 100, x, y)
+    print(x, y)
     update_canvas()
 
 while True:
