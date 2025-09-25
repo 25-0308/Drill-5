@@ -12,12 +12,16 @@ x,y=400,300
 running = True
 idle_bool=True
 run_bool=False
+up_bool=False
+down_bool=False
 
 def handle_events():
     global x, y
     global running
     global idle_bool
     global run_bool
+    global up_bool
+    global down_bool
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
@@ -36,18 +40,22 @@ def handle_events():
             elif event.key == SDLK_UP:
                 if y < 550:
                     idle_bool = False
-                    run_bool = True
+                    up_bool = True
                     y += 10
             elif event.key == SDLK_DOWN:
                 if y > 70:
                     idle_bool = False
-                    run_bool = True
+                    down_bool = True
                     y -= 10
             elif event.key == SDLK_ESCAPE:
                 running = False
 
 def handle_animation():
     global x, y
+    global run_bool
+    global idle_bool
+    global up_bool
+    global down_bool
     clear_canvas()
     bg.clip_draw(0, 0, 1280, 1024, 400, 300, 800, 600)
     character.clip_draw(0, 0, 100, 100, x, y)
@@ -55,6 +63,16 @@ def handle_animation():
         idle()
     if run_bool:
         run()
+        run_bool = False
+        idle_bool = True
+    if up_bool:
+        up()
+        up_bool = False
+        idle_bool = True
+    if down_bool:
+        down()
+        down_bool = False
+        idle_bool = True
     update_canvas()
 
 def idle():
@@ -75,9 +93,20 @@ def run():
         delay(0.05)
         update_canvas()
 
+def up():
+    global x, y
+    c_updown.clip_draw(0, 0, 35, 33, x, y-60,100,100)
+    update_canvas()
+    delay(0.15)
+
+def down():
+    global x, y
+    c_updown.clip_draw(35, 0, 35, 33, x, y-60,100,100)
+    update_canvas()
+    delay(0.15)
+
 while True:
     handle_animation()
-
     handle_events()
     if not running:
         break
