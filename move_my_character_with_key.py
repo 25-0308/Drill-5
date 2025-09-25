@@ -11,11 +11,13 @@ c_updown=load_image('player_updown.png')
 x,y=400,300
 running = True
 idle_bool=True
+run_bool=False
 
 def handle_events():
     global x, y
     global running
     global idle_bool
+    global run_bool
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
@@ -24,18 +26,22 @@ def handle_events():
             if event.key == SDLK_LEFT:
                 if x > 50:
                     idle_bool = False
+                    run_bool = True
                     x -= 10
             elif event.key == SDLK_RIGHT:
                 if x < 750:
                     idle_bool = False
+                    run_bool = True
                     x += 10
             elif event.key == SDLK_UP:
                 if y < 550:
                     idle_bool = False
+                    run_bool = True
                     y += 10
             elif event.key == SDLK_DOWN:
                 if y > 70:
                     idle_bool = False
+                    run_bool = True
                     y -= 10
             elif event.key == SDLK_ESCAPE:
                 running = False
@@ -47,6 +53,8 @@ def handle_animation():
     character.clip_draw(0, 0, 100, 100, x, y)
     if idle_bool:
         idle()
+    if run_bool:
+        run()
     update_canvas()
 
 def idle():
@@ -55,6 +63,15 @@ def idle():
     for i in range(6):
         c_idle.clip_draw(idle_frame*93, 0, 92, 33, x, y-50)
         idle_frame = (idle_frame + 1) % 6
+        delay(0.05)
+        update_canvas()
+
+def run():
+    global x, y
+    run_frame = 0
+    for i in range(6):
+        c_run.clip_draw(run_frame*103, 0, 103, 30, x, y-50)
+        run_frame = (run_frame + 1) % 6
         delay(0.05)
         update_canvas()
 
